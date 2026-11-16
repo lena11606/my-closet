@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 
 type ClothingItem = {
   id: string;
@@ -62,9 +63,26 @@ export default function InventoryPage() {
     loadItems();
   }
 
+  async function handleDelete(id: string) {
+    const { error } = await supabase
+      .from("clothing_items")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+    loadItems();
+  }
+
   return (
     <div className="max-w-xl mx-auto p-8">
-      <h1 className="text-2xl font-semibold mb-6">Inventory</h1>
+      <Link href="/" className="text-sm text-zinc-500 underline">
+        ← Back home
+      </Link>
+
+      <h1 className="text-2xl font-semibold mb-6 mt-4">Inventory</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-3 mb-10">
         <input
@@ -107,13 +125,24 @@ export default function InventoryPage() {
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => (
-          <li key={item.id} className="border rounded px-4 py-3">
-            <div className="font-medium">
-              {item.brand} — {item.type}
+          <li
+            key={item.id}
+            className="border rounded px-4 py-3 flex justify-between items-start"
+          >
+            <div>
+              <div className="font-medium">
+                {item.brand} — {item.type}
+              </div>
+              <div className="text-sm text-zinc-600">
+                Size {item.size} · {item.color}
+              </div>
             </div>
-            <div className="text-sm text-zinc-600">
-              Size {item.size} · {item.color}
-            </div>
+            <button
+              onClick={() => handleDelete(item.id)}
+              className="text-sm text-red-600 underline"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>

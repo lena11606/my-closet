@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50">
@@ -9,6 +11,12 @@ export default function Home() {
           This is Stage 1: a live, deployed app. Inventory, outfits, and inspo
           boards get built on top of this in the next sessions.
         </p>
+        <Link
+          href="/inventory"
+          className="mt-2 bg-black text-white rounded px-4 py-2"
+        >
+          Go to Inventory
+        </Link>
       </main>
     </div>
   );
